@@ -1,6 +1,12 @@
 var WINDOW_WIDTH = 1024,
     WINDOW_HEIGHT = 768,
-    RADIUS = 8;
+    RADIUS = 8,
+    MARGIN_TOP = 60,
+    MARGIN_LEFT = 30;
+
+const endTime = new Date(2018,6,20,18,00,00);    //zhuyi
+var curShowTimeSeconds = 0;
+
 
 window.onload = function(){
     var canvas = document.getElementById("canvas");
@@ -9,27 +15,44 @@ window.onload = function(){
     canvas.width = WINDOW_WIDTH;
     canvas.height = WINDOW_HEIGHT;
 
+    curShowTimeSeconds = getCurrentShowTimeSeconds();
     render(context);
 }
 
+function getCurrentShowTimeSeconds(){
+    var curTime = new Date();
+    var ret = endTime.getTime() - curTime.getTime();
+    ret = Math.round(ret / 1000);
+
+    return ret >= 0 ? ret:0;
+}
+
 function render(cxt){
-    var hours = 12,
-        minutes = 34,
-        seconds = 56;
+    var hours = parseInt(curShowTimeSeconds / 3600),
+        minutes = parseInt((curShowTimeSeconds - hours * 3600) / 60),
+        seconds = curShowTimeSeconds % 60;
     
-    renderDigit(0,0,parseInt(hours/10),cxt);
+    renderDigit(MARGIN_LEFT, MARGIN_TOP, parseInt(hours / 10), cxt);
+    renderDigit(MARGIN_LEFT + 15 * (RADIUS + 1), MARGIN_TOP, parseInt(hours % 10), cxt);
+    renderDigit(MARGIN_LEFT + 30 * (RADIUS + 1), MARGIN_TOP, 10, cxt);
+
+    renderDigit(MARGIN_LEFT + 39 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes / 10), cxt);
+    renderDigit(MARGIN_LEFT + 54 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes % 10), cxt);
+    renderDigit(MARGIN_LEFT + 69 * (RADIUS + 1), MARGIN_TOP, 10, cxt);
+    renderDigit(MARGIN_LEFT + 78 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds / 10), cxt);
+    renderDigit(MARGIN_LEFT + 93 * (RADIUS + 1), MARGIN_TOP, parseInt(seconds % 10), cxt);
 }
 
 function renderDigit(x,y,num,cxt){
 
     cxt.fillStyle = "rgb(0,102,153)";
 
-    for (let i = 0; i < digit[num].length; i++){
-        for (let j = 0; j < digit[num][i].length; j++){
+    for (var i = 0; i < digit[num].length; i++){
+        for (var j = 0; j < digit[num][i].length; j++){
 
             if(digit[num][i][j] == 1){
                 cxt.beginPath();
-                cxt.arc(x + j * 2 * (RADIUS + 1) + (RADIUS + 1), y + i * 2 *(RADIUS + 1) + (RADIUS + 1), RADIUS, 0, 2*Math.PI);
+                cxt.arc(x + j * 2 * (RADIUS + 1) + (RADIUS + 1), y + i * 2 *(RADIUS + 1) + (RADIUS + 1), RADIUS, 0, 2 * Math.PI);
                 cxt.closePath();
                 cxt.fill();
             }

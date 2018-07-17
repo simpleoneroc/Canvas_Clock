@@ -4,7 +4,7 @@ var WINDOW_WIDTH = 1024,
     MARGIN_TOP = 60,
     MARGIN_LEFT = 30;
 
-const endTime = new Date(2018,6,20,18,00,00);    //zhuyi
+const endTime = new Date(2018,6,20,18,00,00);    //注意时间越界
 var curShowTimeSeconds = 0;
 
 

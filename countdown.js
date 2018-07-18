@@ -10,13 +10,22 @@ const endTime = new Date(2018,6,20,18,00,00);    //注意时间越界
       colors = ["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
  
 window.onload = function(){
+
+    WINDOW_WIDTH = document.body.clientWidth;
+    WINDOW_HEIGHT = document.body.clientHeight;
+
+    MARGIN_LEFT = Math.round(WINDOW_WIDTH / 10);
+    RADIUS = Math.round(WINDOW_WIDTH * 4 / 5 / 108) - 1;
+
+    MARGIN_TOP = Math.round(WINDOW_HEIGHT / 5);
+
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
 
     canvas.width = WINDOW_WIDTH;
     canvas.height = WINDOW_HEIGHT;
 
-    curShowTimeSeconds = getCurrentShowTimeSeconds();
+    curShowTimeSeconds = getCurrentShowTimeSeconds(); 
     setInterval(
         function(){
             render(context);
@@ -67,6 +76,8 @@ function update(){
     }
 
     updateBalls();
+
+    console.log(balls.length);
 }
 
 function updateBalls(){
@@ -79,6 +90,16 @@ function updateBalls(){
             balls[i].y = WINDOW_HEIGHT - RADIUS;
             balls[i].vy = - balls[i].vy * 0.75;
         }
+    }
+
+    var cnt = 0;
+    for(var i = 0; i < balls.length; i++){
+        if(balls[i].x + RADIUS > 0 && balls[i].x - RADIUS < WINDOW_WIDTH){
+            balls[cnt++] = balls[i];
+        }
+    }
+    while(balls.length > cnt){
+        balls.pop();
     }
 }
 
@@ -109,7 +130,7 @@ function render(cxt){
         seconds = curShowTimeSeconds % 60;
     
     renderDigit(MARGIN_LEFT, MARGIN_TOP, parseInt(hours / 10), cxt);
-    renderDigit(MARGIN_LEFT + 15 * (RADIUS + 1), MARGIN_TOP, parseInt(hours % 10), cxt);
+    renderDigit(MARGIN_LEFT + 15 * (RADIUS + 1), MARGIN_TOP, parseInt(hours / 10), cxt);
     renderDigit(MARGIN_LEFT + 30 * (RADIUS + 1), MARGIN_TOP, 10, cxt);
 
     renderDigit(MARGIN_LEFT + 39 * (RADIUS + 1), MARGIN_TOP, parseInt(minutes / 10), cxt);
